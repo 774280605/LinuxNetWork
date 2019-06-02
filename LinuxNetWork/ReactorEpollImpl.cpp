@@ -75,7 +75,7 @@ ROLLBACK:
 		}
 	}
 	else if(fds==-1){
-		std::cout << "epoll_wait error:" << errno;
+		int error= errno;
 		if (errno== EINTR) 
 			goto ROLLBACK;
 	}
