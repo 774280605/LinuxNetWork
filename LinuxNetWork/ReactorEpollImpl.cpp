@@ -74,8 +74,7 @@ ROLLBACK:
 			}
 		}
 	}
-	else if(fds==-1){
-		int error= errno;
+	else if(fds==-1){		
 		if (errno== EINTR) 
 			goto ROLLBACK;
 	}
