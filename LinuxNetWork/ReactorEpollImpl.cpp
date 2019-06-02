@@ -43,7 +43,6 @@ void ReactorEpollImpl::removeHandler(int fd, EVENT_TYPE type){
 	int result = epoll_ctl(epollHandler_, EPOLL_CTL_DEL,
 		fd, &ev);
 	if (result == 0) {
-		///handlers_[handler->getHandle()] = handler;
 	}
 	
 }
