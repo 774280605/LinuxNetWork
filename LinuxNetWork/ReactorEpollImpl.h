@@ -25,7 +25,7 @@ public:
 	void deactivate(int fd, EVENT_TYPE type) override;
 	void deactivate(EventHandler* handler, EVENT_TYPE type) override;
 private:
-	int epollHandler_;
+	int epollHandler_{-1};
 
 
 	struct epoll_event resultEvent_[MAX_LEN];

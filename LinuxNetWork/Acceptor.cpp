@@ -37,9 +37,9 @@ int Acceptor::handlerInput(int fd){
 	if (accept==-1){
 		return -1;
 	}
-	int ret = -1;
-	int flags = fcntl(listenSocket_, F_GETFL, 0);
-	ret = fcntl(listenSocket_, F_SETFL, flags | O_NONBLOCK);
+
+	auto flags = fcntl(listenSocket_, F_GETFL, 0);
+	fcntl(listenSocket_, F_SETFL, flags | O_NONBLOCK);
 	return accept;
 }
 
