@@ -5,27 +5,52 @@
 #include <netinet/in.h>
 #include <iostream>
 #include <cstring>
-Acceptor::Acceptor(){
-	listenSocket_ = socket(AF_INET, SOCK_STREAM, 0);
-	int ret =- 1;
-	int flags = fcntl(listenSocket_, F_GETFL, 0);
-	ret= fcntl(listenSocket_, F_SETFL, flags | O_NONBLOCK);
-
-	struct sockaddr_in sin;
-	memset(&sin,0,sizeof(sin));
-	sin.sin_family = AF_INET;
-	sin.sin_port = htons(27015);
-	sin.sin_addr.s_addr = htonl(INADDR_ANY);
-
-	ret = bind(listenSocket_, (struct sockaddr*)&sin, sizeof(sin));
-
-	ret= listen(listenSocket_, SOMAXCONN);
-	if (ret <0)
-		std::cout<<"error";
+#include "Session.h"
+Acceptor::Acceptor(Reactor*reactor):
+reactor_(reactor)
+{
+	
 }
 
 Acceptor::~Acceptor(){
 	
+}
+
+int Acceptor::open(){
+	listenSocket_ = socket(AF_INET, SOCK_STREAM, 0);
+	int ret = -1;
+	uint reuseaddr = 1;
+	ret = setsockopt(listenSocket_, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(uint));
+	if(ret<0){
+		return -1;
+	}
+
+	uint mode = 1;
+	ret= ioctl(listenSocket_, FIONBIO, &mode);
+	
+	if (ret<0){
+		return -1;
+	}
+	struct sockaddr_in sin{};
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(27015);
+	sin.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	ret = bind(listenSocket_, reinterpret_cast<struct sockaddr*>(&sin), sizeof(sin));
+
+	ret = listen(listenSocket_, SOMAXCONN);
+	if (ret < 0)
+		std::cout << "error";
+
+	reactor_->registerHandler(this, READ_EVENT);
+
+	return 0;
+}
+
+int Acceptor::acceptFin(int fd){
+	auto tmpSession = new Session(fd,this->reactor_,&this->handlerManager_);
+	this->handlerManager_.add(tmpSession);
+	return(0);
 }
 
 int Acceptor::handlerInput(int fd){
@@ -33,13 +58,18 @@ int Acceptor::handlerInput(int fd){
 	struct sockaddr_in sin;
 	unsigned int len = sizeof(sin);
 
-	int accept = ::accept(listenSocket_, (struct sockaddr*)&sin, &len);
-	if (accept==-1){
+	const auto accept = ::accept(listenSocket_, reinterpret_cast<struct sockaddr*>(&sin), &len);
+	if (accept<0){
 		return -1;
 	}
+	ulong mode = 1;
+	auto flag = ioctl(accept, FIONBIO, &mode);
+	if(flag<0){		
+		perror("ioctl:");
+	}
+	acceptFin(accept);
 
-	auto flags = fcntl(listenSocket_, F_GETFL, 0);
-	fcntl(listenSocket_, F_SETFL, flags | O_NONBLOCK);
+	
 	return accept;
 }
 
@@ -59,3 +89,17 @@ int Acceptor::handlerClose(int fd){
 int Acceptor::getHandle(){
 	return listenSocket_;
 }
+
+int Acceptor::getEventMask(){
+
+	return this->event_;
+}
+
+void Acceptor::enableEventMask(EVENT_TYPE type){
+	this->event_ |= type;
+}
+
+void Acceptor::disableEventMask(EVENT_TYPE type){
+	this->event_ &= (~type);
+}
+

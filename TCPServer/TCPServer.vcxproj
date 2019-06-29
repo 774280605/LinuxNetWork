@@ -35,9 +35,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{03f60d7c-f15a-4598-a89a-cfec8b63ad0f}</ProjectGuid>
+    <ProjectGuid>{e3d11c14-a197-4fa3-9962-12b4d6244924}</ProjectGuid>
     <Keyword>Linux</Keyword>
-    <RootNamespace>LinuxNetWork</RootNamespace>
+    <RootNamespace>TCPServer</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
     <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
@@ -75,34 +75,11 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="Acceptor.cpp" />
-    <ClCompile Include="EventHandler.cpp" />
-    <ClCompile Include="HandlerManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Reactor.cpp" />
-    <ClCompile Include="ReactorEpollImpl.cpp" />
-    <ClCompile Include="ReactorImpl.cpp" />
-    <ClCompile Include="Session.cpp" />
-    <ClCompile Include="SockAcceptor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Acceptor.h" />
-    <ClInclude Include="EventHandler.h" />
-    <ClInclude Include="Global.h" />
-    <ClInclude Include="HandlerManager.h" />
-    <ClInclude Include="Reactor.h" />
-    <ClInclude Include="ReactorEpollImpl.h" />
-    <ClInclude Include="ReactorImpl.h" />
-    <ClInclude Include="Session.h" />
-    <ClInclude Include="SockAcceptor.h" />
   </ItemGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile />
-    <Link />
-    <Link>
-      <LibraryDependencies>pthread;%(LibraryDependencies)</LibraryDependencies>
-    </Link>
-  </ItemDefinitionGroup>
+  <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

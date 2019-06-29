@@ -23,20 +23,37 @@ void ReactorEpollImpl::registerHandler(int fd, EVENT_TYPE type){
 		
 }
 
-void ReactorEpollImpl::registerHandler(EventHandler* handler, EVENT_TYPE type){
-	struct epoll_event ev{0,0};
-	ev.data.u64 = 0;
-	ev.events = EPOLLIN;
+void ReactorEpollImpl::registerHandler(EventHandler* handler, EVENT_TYPE type) {
+	struct epoll_event ev { 0, 0 };
+
+	int how = 0;
+
+	int what = handler->getEventMask();
+	if (what > 0)
+		how = EPOLL_CTL_MOD;
+	else
+		how = EPOLL_CTL_ADD;
+	
+
+	what |= type;
+	if (what&READ_EVENT)
+		ev.events |= EPOLLIN;
+	if (what& WRITE_EVENT)
+		ev.events |= EPOLLOUT;
+	
 	ev.data.fd = handler->getHandle();
-	const auto  result = epoll_ctl(epollHandler_, EPOLL_CTL_ADD,
+	const auto  result = epoll_ctl(epollHandler_, how,
 		handler->getHandle(), &ev);
 	if (result == 0) {
 		handlers_[handler->getHandle()] = handler;
+		handler->enableEventMask(what);
 	}	
 }
 
 void ReactorEpollImpl::removeHandler(int fd, EVENT_TYPE type){
 	struct epoll_event ev{0,0};
+
+
 	ev.events = EPOLLIN;
 	ev.data.fd = fd;
 	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_DEL,
@@ -48,12 +65,33 @@ void ReactorEpollImpl::removeHandler(int fd, EVENT_TYPE type){
 
 void ReactorEpollImpl::removeHandler(EventHandler* handler, EVENT_TYPE type){
 	struct epoll_event ev{0,0};
-	ev.events = EPOLLIN;
-	ev.data.fd = handler->getHandle();
-	const  auto result = epoll_ctl(epollHandler_, EPOLL_CTL_DEL,
-		handler->getHandle(), &ev);
-	if (result == 0) {
+	int what = handler->getEventMask();
 
+	what &= (~type);
+	auto how = 0;
+	if(what>0){
+		how = EPOLL_CTL_MOD;
+		if(what&READ_EVENT)
+			ev.events |= EPOLLIN;
+		if (what&WRITE_EVENT)
+			ev.events |= EPOLLOUT;
+	}
+	else{
+		how = EPOLL_CTL_DEL;
+		if (type&READ_EVENT)
+			ev.events |= EPOLLIN;
+		if (type&WRITE_EVENT)
+			ev.events |= EPOLLOUT;
+	}
+	
+	ev.data.fd = handler->getHandle();
+	const  auto result = epoll_ctl(epollHandler_, EPOLL_CTL_DEL,handler->getHandle(), &ev);
+	if (result == 0) {
+		handler->disableEventMask(type);
+		auto it = handlers_.find(handler->getHandle());
+		if(it!= handlers_.end()){
+			handlers_.erase(it);
+		}
 	}
 }
 
@@ -81,31 +119,44 @@ void ReactorEpollImpl::handlerEvents(){
 void ReactorEpollImpl::reactivate(int fd, EVENT_TYPE type){
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
-	//ev.data.ptr = handler;
-	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_ADD,
-		fd, &ev);
+	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_ADD,fd, &ev);
 	if (result<0){
 		std::cout << "epoll_ctl" << std::endl;
 	}
 }
 
 void ReactorEpollImpl::reactivate(EventHandler* handler, EVENT_TYPE type){
-	struct epoll_event ev;
-	ev.events = EPOLLIN;
+	struct epoll_event ev{0,0};
+	int how = 0;
+	int what = handler->getEventMask();
+	if (what>0){
+		how = EPOLL_CTL_MOD;
+	}
+	else{
+		how = EPOLL_CTL_ADD;
+	}
+
+	what |= type;
+	if(what&READ_EVENT){
+		ev.events |= EPOLLIN;
+	}
+	if(what&WRITE_EVENT){
+		ev.events |= EPOLLOUT;
+	}
+	
+	
 	ev.data.ptr = handler;
-	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_ADD,
-		handler->getHandle(), &ev);
+	const auto result = epoll_ctl(epollHandler_, how,handler->getHandle(), &ev);
 	if (result<0){
 		std::cout << "epoll_ctl" << std::endl;
+		handler->enableEventMask(type);
 	}
 }
 
 void ReactorEpollImpl::deactivate(int fd, EVENT_TYPE type){
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
-
-	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_DEL,
-		fd, &ev);
+	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_DEL,fd, &ev);
 	if (result<0){
 		std::cout << "epoll_ctl" << std::endl;
 
@@ -113,13 +164,33 @@ void ReactorEpollImpl::deactivate(int fd, EVENT_TYPE type){
 }
 
 void ReactorEpollImpl::deactivate(EventHandler* handler, EVENT_TYPE type){
-	struct epoll_event ev;
-	ev.events = EPOLLIN;
+	struct epoll_event ev{0,0};
+	auto how = 0;
+	auto what = handler->getEventMask();
+	what &= (~type);
+	if (what > 0){
+		how = EPOLL_CTL_MOD;
+		if(what&READ_EVENT){
+			ev.events |= EPOLLIN;
+			
+		}
+		if (what&WRITE_EVENT)
+			ev.events |= EPOLLOUT;
+	}
+		
+	else{
+		how = EPOLL_CTL_DEL;
+		if (type&READ_EVENT) {
+			ev.events |= EPOLLIN;
+		}
+		if (type&WRITE_EVENT)
+			ev.events |= EPOLLOUT;
+	}
+	
 
-	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_DEL,
-		handler->getHandle(), &ev);
+	const auto result = epoll_ctl(epollHandler_, how,handler->getHandle(), &ev);
 	if (result<0){
 		std::cout << "epoll_ctl" << std::endl;
-
+		handler->disableEventMask(type);
 	}
 }

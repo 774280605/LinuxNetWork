@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinuxNetWork", "LinuxNetWork\LinuxNetWork.vcxproj", "{03F60D7C-F15A-4598-A89A-CFEC8B63AD0F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPServer", "TCPServer\TCPServer.vcxproj", "{E3D11C14-A197-4FA3-9962-12B4D6244924}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -33,6 +35,22 @@ Global
 		{03F60D7C-F15A-4598-A89A-CFEC8B63AD0F}.Release|x64.Build.0 = Release|x64
 		{03F60D7C-F15A-4598-A89A-CFEC8B63AD0F}.Release|x86.ActiveCfg = Release|x86
 		{03F60D7C-F15A-4598-A89A-CFEC8B63AD0F}.Release|x86.Build.0 = Release|x86
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Debug|ARM.Build.0 = Debug|ARM
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Debug|ARM64.Build.0 = Debug|ARM64
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Debug|x64.ActiveCfg = Debug|x64
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Debug|x64.Build.0 = Debug|x64
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Debug|x86.ActiveCfg = Debug|x86
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Debug|x86.Build.0 = Debug|x86
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|ARM.ActiveCfg = Release|ARM
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|ARM.Build.0 = Release|ARM
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|ARM64.ActiveCfg = Release|ARM64
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|ARM64.Build.0 = Release|ARM64
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|x64.ActiveCfg = Release|x64
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|x64.Build.0 = Release|x64
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|x86.ActiveCfg = Release|x86
+		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

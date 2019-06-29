@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include "Global.h"
 class EventHandler
 {
 public:
@@ -11,4 +11,7 @@ public:
 	virtual int handlerTimeout(int fd)=0;
 	virtual int handlerClose(int fd)=0;
 	virtual int getHandle()=0;
+	virtual int getEventMask() = 0;
+	virtual void enableEventMask(EVENT_TYPE type) = 0;
+	virtual void disableEventMask(EVENT_TYPE type) = 0;
 };

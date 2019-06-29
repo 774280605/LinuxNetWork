@@ -23,7 +23,7 @@ void Reactor::removeHandler(int fd, EVENT_TYPE type){
 }
 
 void Reactor::removeHandler(EventHandler* handle, EVENT_TYPE type){
-	impl_->registerHandler(handle, type);
+	impl_->removeHandler(handle, type);
 }
 
 void Reactor::handlerEvents(){
@@ -31,13 +31,17 @@ void Reactor::handlerEvents(){
 }
 
 void Reactor::reactivate(int fd, EVENT_TYPE type){
+	impl_->reactivate(fd, type);
 }
 
 void Reactor::reactivate(EventHandler* handler, EVENT_TYPE type){
+	impl_->reactivate(handler, type);
 }
 
 void Reactor::deactivate(int fd, EVENT_TYPE type){
+	impl_->deactivate(fd, type);
 }
 
 void Reactor::deactivate(EventHandler* handler, EVENT_TYPE type){
+	impl_->deactivate(handler, type);
 }

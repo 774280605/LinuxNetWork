@@ -1,18 +1,19 @@
 #include <cstdio>
 #include "EventHandler.h"
-#include "LFAcceptor.h"
 #include "Acceptor.h"
-#include "ThreadManager.h"
+#include "Reactor.h"
+
 int main()
 {
-	Reactor*reactor = new Reactor();
-	EventHandler*acceptor = new Acceptor();
-	LFThreadPool*lfThreadPool = new LFThreadPool(reactor);
-	EventHandler* lfAcceptor = new LFAcceptor(acceptor,reactor,lfThreadPool);
+	Reactor* reactor = new Reactor;
 
-	ThreadManager manager(reactor, lfThreadPool);
-	manager.startup();
-	
+	Acceptor* acceptor = new Acceptor(reactor);
+	acceptor->open();
+
+
+	while (true){
+		reactor->handlerEvents();
+	}
 
     return 0;
 }
