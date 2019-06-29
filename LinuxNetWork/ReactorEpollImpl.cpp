@@ -117,11 +117,34 @@ void ReactorEpollImpl::handlerEvents(){
 }
 
 void ReactorEpollImpl::reactivate(int fd, EVENT_TYPE type){
-	struct epoll_event ev;
-	ev.events = EPOLLIN;
-	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_ADD,fd, &ev);
+	struct epoll_event ev{0,0};
+	auto it = handlers_.find(fd);
+	if (it == handlers_.end())
+		return;
+	auto tmpHandler = it->second;
+
+
+
+	int how = 0;
+	int what = tmpHandler->getEventMask();
+	if (what > 0) {
+		how = EPOLL_CTL_MOD;
+	}
+	else {
+		how = EPOLL_CTL_ADD;
+	}
+
+	what |= type;
+	if (what&READ_EVENT) {
+		ev.events |= EPOLLIN;
+	}
+	if (what&WRITE_EVENT) {
+		ev.events |= EPOLLOUT;
+	}
+	ev.data.fd = fd;
+	const auto result = epoll_ctl(epollHandler_, how,fd, &ev);
 	if (result<0){
-		std::cout << "epoll_ctl" << std::endl;
+		tmpHandler->enableEventMask(type);
 	}
 }
 
@@ -145,7 +168,7 @@ void ReactorEpollImpl::reactivate(EventHandler* handler, EVENT_TYPE type){
 	}
 	
 	
-	ev.data.ptr = handler;
+	ev.data.fd = handler->getHandle();
 	const auto result = epoll_ctl(epollHandler_, how,handler->getHandle(), &ev);
 	if (result<0){
 		std::cout << "epoll_ctl" << std::endl;
@@ -154,11 +177,41 @@ void ReactorEpollImpl::reactivate(EventHandler* handler, EVENT_TYPE type){
 }
 
 void ReactorEpollImpl::deactivate(int fd, EVENT_TYPE type){
-	struct epoll_event ev;
-	ev.events = EPOLLIN;
-	const auto result = epoll_ctl(epollHandler_, EPOLL_CTL_DEL,fd, &ev);
+
+	auto it = handlers_.find(fd);
+	if (it == handlers_.end())
+		return;
+	auto tmpHandler = it->second;
+
+	struct epoll_event ev{0,0};
+
+	auto how = 0;
+	auto what = tmpHandler->getEventMask();
+	what &= (~type);
+	if (what > 0) {
+		how = EPOLL_CTL_MOD;
+		if (what&READ_EVENT) {
+			ev.events |= EPOLLIN;
+
+		}
+		if (what&WRITE_EVENT)
+			ev.events |= EPOLLOUT;
+	}
+
+	else {
+		how = EPOLL_CTL_DEL;
+		if (type&READ_EVENT) {
+			ev.events |= EPOLLIN;
+		}
+		if (type&WRITE_EVENT)
+			ev.events |= EPOLLOUT;
+	}
+
+	ev.data.fd = fd;
+
+	const auto result = epoll_ctl(epollHandler_, how,fd, &ev);
 	if (result<0){
-		std::cout << "epoll_ctl" << std::endl;
+		tmpHandler->disableEventMask(type);
 
 	}
 }
