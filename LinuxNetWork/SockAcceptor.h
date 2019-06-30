@@ -1,8 +1,9 @@
 ﻿#pragma once
 #include <cstdint>
+#include "IPCSock.h"
 class Reactor;
 class Session;
-class SockAcceptor
+class SockAcceptor:public IPCSock
 {
 public:
 	SockAcceptor();
@@ -12,8 +13,4 @@ public:
 	int open(Reactor* reactor);
 
 	int accept(Session*session);
-
-
-private:
-	uintmax_t listen_{};
 };

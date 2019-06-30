@@ -17,60 +17,29 @@ Acceptor::~Acceptor(){
 }
 
 int Acceptor::open(){
-	listenSocket_ = socket(AF_INET, SOCK_STREAM, 0);
-	int ret = -1;
-	uint reuseaddr = 1;
-	ret = setsockopt(listenSocket_, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(uint));
-	if(ret<0){
-		return -1;
-	}
-
-	uint mode = 1;
-	ret= ioctl(listenSocket_, FIONBIO, &mode);
-	
-	if (ret<0){
-		return -1;
-	}
-	struct sockaddr_in sin{};
-	sin.sin_family = AF_INET;
-	sin.sin_port = htons(27015);
-	sin.sin_addr.s_addr = htonl(INADDR_ANY);
-
-	ret = bind(listenSocket_, reinterpret_cast<struct sockaddr*>(&sin), sizeof(sin));
-
-	ret = listen(listenSocket_, SOMAXCONN);
-	if (ret < 0)
-		std::cout << "error";
+	acceptor_.open(reactor_);
 
 	reactor_->registerHandler(this, READ_EVENT);
 
 	return 0;
 }
 
-int Acceptor::acceptFin(int fd){
-	auto tmpSession = new Session(fd,this->reactor_,&this->handlerManager_);
-	this->handlerManager_.add(tmpSession);
-	return(0);
+Session* Acceptor::makeService(){
+	auto tmpSession = new Session(0, this->reactor_, &this->handlerManager_);
+	
+	return(tmpSession);
+}
+
+int Acceptor::acceptFin(Session* service){
+	service->activate();
+	this->handlerManager_.add(service);
 }
 
 int Acceptor::handlerInput(int fd){
-
-	struct sockaddr_in sin;
-	unsigned int len = sizeof(sin);
-
-	const auto accept = ::accept(listenSocket_, reinterpret_cast<struct sockaddr*>(&sin), &len);
-	if (accept<0){
-		return -1;
-	}
-	ulong mode = 1;
-	auto flag = ioctl(accept, FIONBIO, &mode);
-	if(flag<0){		
-		perror("ioctl:");
-	}
-	acceptFin(accept);
-
-	
-	return accept;
+	auto tmpService = makeService();
+	acceptor_.accept(tmpService);
+	acceptFin(tmpService);
+	return 0;
 }
 
 int Acceptor::handlerOutput(int fd){
@@ -87,7 +56,7 @@ int Acceptor::handlerClose(int fd){
 }
 
 int Acceptor::getHandle(){
-	return listenSocket_;
+	return acceptor_.getHandle();
 }
 
 int Acceptor::getEventMask(){

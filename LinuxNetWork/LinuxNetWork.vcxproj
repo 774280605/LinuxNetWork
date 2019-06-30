@@ -76,8 +76,11 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="Acceptor.cpp" />
+    <ClCompile Include="DataBlock.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="HandlerManager.cpp" />
+    <ClCompile Include="IPCSock.cpp" />
+    <ClCompile Include="IPCStream.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Reactor.cpp" />
     <ClCompile Include="ReactorEpollImpl.cpp" />
@@ -87,9 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Acceptor.h" />
+    <ClInclude Include="DataBlock.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="HandlerManager.h" />
+    <ClInclude Include="IPCSock.h" />
+    <ClInclude Include="IPCStream.h" />
     <ClInclude Include="Reactor.h" />
     <ClInclude Include="ReactorEpollImpl.h" />
     <ClInclude Include="ReactorImpl.h" />

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "Reactor.h"
 #include "HandlerManager.h"
+#include "IPCStream.h"
 class Session:
 	public EventHandler{
 public:
@@ -22,10 +23,13 @@ public:
 
 	void disableEventMask(EVENT_TYPE type) override;
 	void setHandle(uintmax_t handle);
+	void activate();
+
 private:
 
 	int fd_;
-	EVENT_TYPE event_{0};
+	int event_{0};
 	Reactor*reactor_{nullptr};
 	HandlerManager*handlerManager_{nullptr};
+	IPCStream stream_;
 };

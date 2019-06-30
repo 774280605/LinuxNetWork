@@ -1,8 +1,7 @@
 #pragma once
 
-using EVENT_TYPE = int;
 
-enum {
+enum EVENT_TYPE {
 	READ_EVENT = 0x01,
 	ACCEPT_EVENT = 0x02,
 	WRITE_EVENT = 0x04,

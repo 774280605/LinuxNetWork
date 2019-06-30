@@ -2,6 +2,8 @@
 #include "EventHandler.h"
 #include "Reactor.h"
 #include "HandlerManager.h"
+#include "SockAcceptor.h"
+class Session;
 class Acceptor:public EventHandler
 {
 public:
@@ -10,7 +12,8 @@ public:
 
 
 	int open();
-	int acceptFin(int fd);
+	Session*makeService();
+	int acceptFin(Session* service);
 
 	int handlerInput(int fd) override;
 	int handlerOutput(int fd) override;
@@ -24,9 +27,10 @@ public:
 
 	void disableEventMask(EVENT_TYPE type) override;
 private:
-	int listenSocket_{};
+	
 
 	Reactor*reactor_{};
-	EVENT_TYPE event_{ 0 };
+	int event_{ 0 };
 	HandlerManager handlerManager_;
+	SockAcceptor acceptor_;
 };

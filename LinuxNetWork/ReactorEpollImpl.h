@@ -19,15 +19,20 @@ public:
 	void removeHandler(EventHandler* handle, EVENT_TYPE type) override;
 	void handlerEvents() override;
 
-
+	/*
+	 * 重新激活事件
+	 */
 	void reactivate(int fd, EVENT_TYPE type) override;
 	void reactivate(EventHandler* handler, EVENT_TYPE type) override;
+	/*
+	 * 注销事件
+	 */
 	void deactivate(int fd, EVENT_TYPE type) override;
 	void deactivate(EventHandler* handler, EVENT_TYPE type) override;
 private:
-	int epollHandler_{-1};
+	int epollHandler_{0};
 
 
-	struct epoll_event resultEvent_[MAX_LEN];
+	struct epoll_event resultEvent_[MAX_LEN]{0};
 	std::map<int, EventHandler*> handlers_;
 };
