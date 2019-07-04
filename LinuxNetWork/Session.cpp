@@ -17,6 +17,11 @@ Session::~Session(){
 }
 
 int Session::handlerInput(int fd){
+	/*
+	 * 测试：注销read事件
+	 */
+	//this->reactor_->deactivate(fd, READ_EVENT);
+
 
 	char buffer[1024] = {0};
 	auto bytes = this->stream_.recv(buffer, 1024);
@@ -30,6 +35,10 @@ int Session::handlerInput(int fd){
 	uint len = strlen(msg);
 	auto tansBytes = this->stream_.send(static_cast<void*>(msg), len);
 
+	/*
+	 * 测试：激活read事件
+	 */
+	//this->reactor_->reactivate(fd, READ_EVENT);
 	return bytes;
 }
 
@@ -50,15 +59,15 @@ int Session::getHandle(){
 }
 
 int Session::getEventMask(){
-	return this->event_;
+	return this->eventMask_;
 }
 
 void Session::enableEventMask(EVENT_TYPE type) {
-	this->event_ |= type;
+	this->eventMask_ |= type;
 }
 
 void Session::disableEventMask(EVENT_TYPE type){
-	this->event_ &= (~type);
+	this->eventMask_ &= (~type);
 }
 
 void Session::setHandle(uintmax_t handle){

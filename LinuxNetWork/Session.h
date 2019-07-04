@@ -4,8 +4,7 @@
 #include "Reactor.h"
 #include "HandlerManager.h"
 #include "IPCStream.h"
-class Session:
-	public EventHandler{
+class Session:public EventHandler{
 public:
 	Session(int fd,Reactor*reactor,HandlerManager*handlerManager);
 	virtual ~Session();
@@ -28,7 +27,7 @@ public:
 private:
 
 	int fd_;
-	int event_{0};
+	int eventMask_{0};
 	Reactor*reactor_{nullptr};
 	HandlerManager*handlerManager_{nullptr};
 	IPCStream stream_;
