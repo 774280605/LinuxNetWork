@@ -82,6 +82,7 @@
     <ClCompile Include="IPCSock.cpp" />
     <ClCompile Include="IPCStream.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MessageBlock.cpp" />
     <ClCompile Include="Reactor.cpp" />
     <ClCompile Include="ReactorEpollImpl.cpp" />
     <ClCompile Include="ReactorImpl.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="HandlerManager.h" />
     <ClInclude Include="IPCSock.h" />
     <ClInclude Include="IPCStream.h" />
+    <ClInclude Include="MessageBlock.h" />
     <ClInclude Include="Reactor.h" />
     <ClInclude Include="ReactorEpollImpl.h" />
     <ClInclude Include="ReactorImpl.h" />

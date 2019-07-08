@@ -2,19 +2,29 @@
 
 class DataBlock
 {
+
+
+
 public:
 	DataBlock();
 	virtual ~DataBlock();
 
-
-
-
-
+	long getDataLen()const;
+	long getTotalLen()const;
+	long add(void*data, long len);
+	long remove(void*buffer,long len);
+	DataBlock*next()const;
+	void next(DataBlock*block);
+	long space()const;
+private:
+	int blockExpand(long len);
+	void blockAlign();
 
 private:
 	char*buffer_{nullptr};
-
-	int totalSize_{};
-	DataBlock*prev_{nullptr};
+	char*origin_buffer_{ nullptr };
+	long misalign_{};
+	long totalLen_{};
+	long off_{  };
 	DataBlock*next_{nullptr};
 };

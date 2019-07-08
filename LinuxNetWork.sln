@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinuxNetWork", "LinuxNetWor
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPServer", "TCPServer\TCPServer.vcxproj", "{E3D11C14-A197-4FA3-9962-12B4D6244924}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample-Test1", "Sample-Test1\Sample-Test1.vcxproj", "{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -51,6 +53,18 @@ Global
 		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|x64.Build.0 = Release|x64
 		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|x86.ActiveCfg = Release|x86
 		{E3D11C14-A197-4FA3-9962-12B4D6244924}.Release|x86.Build.0 = Release|x86
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Debug|ARM.ActiveCfg = Debug|Win32
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Debug|x64.ActiveCfg = Debug|x64
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Debug|x64.Build.0 = Debug|x64
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Debug|x86.ActiveCfg = Debug|Win32
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Debug|x86.Build.0 = Debug|Win32
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Release|ARM.ActiveCfg = Release|Win32
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Release|ARM64.ActiveCfg = Release|Win32
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Release|x64.ActiveCfg = Release|x64
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Release|x64.Build.0 = Release|x64
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Release|x86.ActiveCfg = Release|Win32
+		{1FB64FA7-0BFC-46AC-9340-71D1B9F32245}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
