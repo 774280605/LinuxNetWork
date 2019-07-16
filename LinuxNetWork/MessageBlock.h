@@ -1,5 +1,7 @@
 ﻿#pragma once
+#include <cstdint>
 class DataBlock;
+
 class MessageBlock
 {
 public:
@@ -8,8 +10,12 @@ public:
 
 	int add(char* data, long len);
 	int remove(char*buffer,long len);
+
+	int read_n(uintmax_t fd,long len);
+	int write_n(uintmax_t fd,long len);
+	long length()const;
 private:
-	void expand();
+	void freeBlock();
 
 private:
 	DataBlock*first_{nullptr};

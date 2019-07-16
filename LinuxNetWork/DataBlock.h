@@ -16,15 +16,15 @@ public:
 	DataBlock*next()const;
 	void next(DataBlock*block);
 	long space()const;
+	long duplicate(char*buffer, long len) const;
 private:
 	int blockExpand(long len);
 	void blockAlign();
 
-private:
+//private:
 	char*buffer_{nullptr};
-	char*origin_buffer_{ nullptr };
 	long misalign_{};
 	long totalLen_{};
-	long off_{  };
+	long off_{};
 	DataBlock*next_{nullptr};
 };
